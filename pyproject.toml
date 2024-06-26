@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "coq-learn"
+version = "0.1.0"
+description = "Maching learning for Coq"
+authors = ["Anton Danilkin"]
+readme = "README.md"
+packages = [
+    { include = "coq_learn" },
+]
+
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[[tool.poetry.source]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+priority = "explicit"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+coq-tracer-api = {git = "https://github.com/afdw/coq-tracer-api"}
+pydantic = "^2.7.1"
+evaluate = "^0.4.2"
+datasets = "^2.19.0"
+transformers = "^4.40.1"
+wandb = "^0.16.6"
+coq-interact-api = {git = "https://github.com/afdw/coq-interact-api"}
+fastapi = "^0.111.0"
+uvicorn = {extras = ["standard"], version = "^0.29.0"}
+
+[tool.poetry.group.cpu.dependencies]
+torch = {version = "^2.3.0+cpu", source = "pytorch-cpu"}
+torchvision = {version = "^0.18.0+cpu", source = "pytorch-cpu"}
+torchaudio = {version = "^2.3.0+cpu", source = "pytorch-cpu"}
+
+# [tool.poetry.group.cuda.dependencies]
+# torch = {version = "^2.3.0+cu121", source = "pytorch-cu121"}
+# torchvision = {version = "^0.18.0+cu121", source = "pytorch-cu121"}
+# torchaudio = {version = "^2.3.0+cu121", source = "pytorch-cu121"}
+
+[tool.poetry.group.dev.dependencies]
+pyright = "^1.1.358"
+ruff = "^0.3.5"
+poethepoet = "^0.26.1"
+
+[tool.poe.tasks]
+force-cuda = "pip install torch>=2.3.0+cu121 torchvision>=0.18.0+cu121 torchaudio>=2.3.0+cu121 --index-url https://download.pytorch.org/whl/cu121"
+force-rocm = "pip install torch>=2.3.0+rocm6.0 torchvision>=0.18.0+rocm6.0 torchaudio>=2.3.0+rocm6.0 --index-url https://download.pytorch.org/whl/rocm6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+exclude = ["**/__pycache__", ".venv", "old"]
+ignore = [".venv/**"]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = "none"
+reportUnknownArgumentType = "none"
+reportUnknownVariableType = "none"
+reportUnknownMemberType = "none"
+venvPath = "."
+venv = ".venv"
+
+[tool.ruff]
+line-length = 160
